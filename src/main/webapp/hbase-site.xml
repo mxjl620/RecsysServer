@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+    <property>
+        <name>hbase.rootdir</name>
+        <value>hdfs://192.168.235.146:8020/hbase</value>
+    </property>
+    <property>
+        <name>hbase.tmp.dir</name>
+        <value>/home/kimi/Development/hbase-1.2.4/data/tmp</value>
+    </property>
+    <property>
+        <name>hbase.zookeeper.property.dataDir</name>
+        <value>/home/kimi/Development/hbase-1.2.4/data/zookeeper</value>
+    </property>
+    <property>
+        <name>hbase.cluster.distributed</name>
+        <value>true</value>
+    </property>
+    <property>
+        <name>hbase.zookeeper.quorum</name>
+        <value>192.168.235.146</value>
+    </property>
+    <property>
+        <name>hbase.master</name>
+        <value>master</value>
+    </property>
+    <property>
+        <name>hbase.master.info.port</name>
+        <value>60010</value>
+    </property>
+    <property>
+        <name>hbase.master.port</name>
+        <value>60000</value>
+    </property>
+</configuration>
