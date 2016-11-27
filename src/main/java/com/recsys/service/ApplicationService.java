@@ -10,7 +10,7 @@ public interface ApplicationService {
 
     public Application addApplication(Application application, String userid);
 
-    public Application modifyApplication(Application application, String userid);
+    public Application modifyApplication(String userid, Application application);
 
     public Application deleteApplication(String applicationid, String userid);
 

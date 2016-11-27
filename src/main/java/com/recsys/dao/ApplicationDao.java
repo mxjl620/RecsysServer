@@ -9,4 +9,6 @@ public interface ApplicationDao {
     public Application addApplication(Application application, String userid);
 
     public List<String> listApplicationByUserid(String userid);
+
+    public Application modifyApplicationInfo(String userid, Application application);
 }

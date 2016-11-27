@@ -2,6 +2,7 @@ package com.recsys.controller;
 
 import com.recsys.http.request.AddApplicationRequest;
 import com.recsys.http.request.ListApplicationRequest;
+import com.recsys.http.request.ModifyApplicationInfoRequest;
 import com.recsys.service.ApplicationService;
 import com.recsys.util.Application;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +43,8 @@ public class ApplicationManagementController {
         if (request.getAppDesc() != null) {
             application.setAppDesc(request.getAppDesc());
         }
-        if (request.getUserEmail() != null) {
-            application.setEmail(request.getUserEmail());
+        if (request.getEmail() != null) {
+            application.setEmail(request.getEmail());
         }
         if (request.getProductDesc() != null) {
             application.setProductDesc(request.getProductDesc());
@@ -56,8 +57,28 @@ public class ApplicationManagementController {
 
     @RequestMapping(value = "/modifyApplication", method = RequestMethod.POST)
     @ResponseBody
-    public BaseResponse modifyApplication(HttpServletRequest req, HttpServletResponse response) {
+    public BaseResponse modifyApplicationInfo(@RequestBody ModifyApplicationInfoRequest request) {
         BaseResponse resp = new BaseResponse();
+        if (request.getUserid() == null || request.getAppid() == null) {
+            resp.setStatus(400);
+            resp.setMsg("parameter error!");
+            return resp;
+        }
+        Application application = new Application();
+        application.setAppid(request.getAppid());
+        if (request.getAppName() != null) {
+            application.setAppName(request.getAppName());
+        }
+        if (request.getAppDesc() != null) {
+            application.setAppDesc(request.getAppDesc());
+        }
+        if (request.getEmail() != null) {
+            application.setEmail(request.getEmail());
+        }
+        if (request.getProductDesc() != null) {
+            application.setProductDesc(request.getProductDesc());
+        }
+        applicationService.modifyApplication(request.getUserid(), application);
         resp.setStatus(HttpStatus.OK.value());
         return resp;
     }

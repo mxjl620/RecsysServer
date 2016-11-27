@@ -24,8 +24,8 @@ public class ApplicationServiceImpl implements ApplicationService {
         return applicationDao.addApplication(application, userid);
     }
 
-    public Application modifyApplication(Application application, String userid) {
-        return null;
+    public Application modifyApplication(String userid, Application application) {
+        return applicationDao.modifyApplicationInfo(userid, application);
     }
 
     public Application deleteApplication(String applicationid, String userid) {

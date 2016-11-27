@@ -64,4 +64,16 @@ public class ApplicationDaoImpl implements ApplicationDao {
             }
         });
     }
+
+    public Application modifyApplicationInfo(final String userid, final Application application) {
+        final String value = Utils.Object2JsonStr(application);
+        return hbaseTemplate.execute(TABLE_NAME, new TableCallback<Application>() {
+            public Application doInTable(HTableInterface table) throws Throwable {
+                Put p = new Put(Bytes.toBytes(userid));
+                p.add(Bytes.toBytes(TABLE_COLUMN_FAMILY), Bytes.toBytes(application.getAppid()), Bytes.toBytes(value));
+                table.put(p);
+                return application;
+            }
+        });
+    }
 }
