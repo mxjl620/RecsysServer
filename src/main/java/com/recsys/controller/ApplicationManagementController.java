@@ -1,6 +1,7 @@
 package com.recsys.controller;
 
 import com.recsys.http.request.AddApplicationRequest;
+import com.recsys.http.request.ListApplicationRequest;
 import com.recsys.service.ApplicationService;
 import com.recsys.util.Application;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import com.recsys.http.BaseResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/applicationManagement")
@@ -26,10 +28,9 @@ public class ApplicationManagementController {
 
     @RequestMapping(value = "/addApplication", method = RequestMethod.POST)
     @ResponseBody
-    public BaseResponse addApplication(@RequestBody final AddApplicationRequest request,
-                                       HttpServletResponse response) {
+    public BaseResponse addApplication(@RequestBody final AddApplicationRequest request) {
         BaseResponse resp = new BaseResponse();
-        if (request.getUserid().equals("")) {
+        if (request.getUserid() == null) {
             resp.setStatus(400);
             resp.setMsg("parameter error!");
             return resp;
@@ -71,9 +72,17 @@ public class ApplicationManagementController {
 
     @RequestMapping(value = "/listApplication", method = RequestMethod.POST)
     @ResponseBody
-    public BaseResponse listApplication(HttpServletRequest req, HttpServletResponse response) {
+    public BaseResponse listApplication(@RequestBody ListApplicationRequest request) {
         BaseResponse resp = new BaseResponse();
+        if (request.getUserid() == null) {
+            resp.setStatus(400);
+            resp.setMsg("parameter error!");
+            return resp;
+        }
+
+        List<Application> applications = applicationService.listApplicationByUserid(request.getUserid());
         resp.setStatus(HttpStatus.OK.value());
+        resp.setData(applications);
         return resp;
     }
 }

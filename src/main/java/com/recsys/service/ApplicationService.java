@@ -14,5 +14,5 @@ public interface ApplicationService {
 
     public Application deleteApplication(String applicationid, String userid);
 
-    public List<Application> listApplication(String userid);
+    public List<Application> listApplicationByUserid(String userid);
 }
