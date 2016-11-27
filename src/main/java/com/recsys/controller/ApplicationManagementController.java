@@ -44,8 +44,8 @@ public class ApplicationManagementController {
         if (request.getUserEmail() != null) {
             application.setEmail(request.getUserEmail());
         }
-        if (request.getProDesc() != null) {
-            application.setEmail(request.getProDesc());
+        if (request.getProductDesc() != null) {
+            application.setProductDesc(request.getProductDesc());
         }
         Application result = applicationService.addApplication(application, request.getUserid());
         resp.setData(result);

@@ -22,6 +22,10 @@
         <value>192.168.235.146</value>
     </property>
     <property>
+        <name>hbase.zookeeper.property.clientPort</name>
+        <value>2181</value>
+    </property>
+    <property>
         <name>hbase.master</name>
         <value>master</value>
     </property>

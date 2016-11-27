@@ -10,7 +10,7 @@ public class AddApplicationRequest {
 
     private String userEmail;
 
-    private String proDesc;
+    private String productDesc;
 
     public String getUserid() {
         return userid;
@@ -44,11 +44,11 @@ public class AddApplicationRequest {
         this.userEmail = userEmail;
     }
 
-    public String getProDesc() {
-        return proDesc;
+    public String getProductDesc() {
+        return productDesc;
     }
 
-    public void setProDesc(String proDesc) {
-        this.proDesc = proDesc;
+    public void setProductDesc(String productDesc) {
+        this.productDesc = productDesc;
     }
 }
