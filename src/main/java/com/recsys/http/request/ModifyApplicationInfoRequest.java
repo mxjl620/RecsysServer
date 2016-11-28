@@ -3,7 +3,7 @@ package com.recsys.http.request;
 public class ModifyApplicationInfoRequest {
     private String userid;
 
-    private Long appid;
+    private String appid;
 
     private String appName;
 
@@ -21,11 +21,11 @@ public class ModifyApplicationInfoRequest {
         this.userid = userid;
     }
 
-    public Long getAppid() {
+    public String getAppid() {
         return appid;
     }
 
-    public void setAppid(Long appid) {
+    public void setAppid(String appid) {
         this.appid = appid;
     }
 

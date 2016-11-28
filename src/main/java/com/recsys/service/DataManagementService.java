@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface DataManagementService {
 
-    public DataUtil addDataFile(Long appid, DataUtil data);
+    public DataUtil addDataFile(String appid, DataUtil data);
 
-    public List<DataUtil> listDataFile(Long appid);
+    public List<DataUtil> listDataFile(String appid);
 
-    public Boolean DeleteDataFile(Long appid, Long dataid);
+    public Boolean DeleteDataFile(String appid, String dataid);
 
-    public Boolean UploadDataFile(Long appid, Long dataid);
+    public Boolean UploadDataFile(String appid, String dataid);
 }

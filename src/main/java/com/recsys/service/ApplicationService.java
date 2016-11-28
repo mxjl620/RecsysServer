@@ -13,7 +13,7 @@ public interface ApplicationService {
 
     public Application modifyApplication(String userid, Application application);
 
-    public Boolean deleteApplication(String userid, Long appid);
+    public Boolean deleteApplication(String userid, String appid);
 
     public List<Application> listApplicationByUserid(String userid);
 }

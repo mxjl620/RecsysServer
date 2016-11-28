@@ -1,7 +1,8 @@
 package com.recsys.controller;
 
 import com.recsys.http.BaseResponse;
-import com.recsys.http.request.AddDataRequest;
+import com.recsys.http.request.AddDataFileRequest;
+import com.recsys.http.request.ListDataFileRequest;
 import com.recsys.service.DataManagementService;
 import com.recsys.util.DataUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "dataManagement")
@@ -28,7 +30,7 @@ public class DataManagementController {
 
     @RequestMapping(value = "/addData", method = RequestMethod.POST)
     @ResponseBody
-    public BaseResponse addDataFile(@RequestBody AddDataRequest request) {
+    public BaseResponse addDataFile(@RequestBody AddDataFileRequest request) {
         BaseResponse resp = new BaseResponse();
         if (request.getAppid() == null || request.getType() == null) {
             resp.setStatus(400);
@@ -49,17 +51,24 @@ public class DataManagementController {
 
     @RequestMapping(value = "/delData", method = RequestMethod.POST)
     @ResponseBody
-    public BaseResponse delDataFile(HttpServletRequest req, HttpServletResponse response) {
+    public BaseResponse delDataFile(@RequestBody ListDataFileRequest request) {
         BaseResponse resp = new BaseResponse();
         resp.setStatus(HttpStatus.OK.value());
         return resp;
     }
 
-    @RequestMapping(value = "/listData", method = RequestMethod.POST)
+    @RequestMapping(value = "/listDataFile", method = RequestMethod.POST)
     @ResponseBody
-    public BaseResponse listDataFile(HttpServletRequest req, HttpServletResponse response) {
+    public BaseResponse listDataFile(@RequestBody ListDataFileRequest request) {
         BaseResponse resp = new BaseResponse();
+        if (request.getAppid() == null) {
+            resp.setStatus(400);
+            resp.setMsg("parameter error!");
+            return resp;
+        }
+        List<DataUtil> list = dataManagementService.listDataFile(request.getAppid());
         resp.setStatus(HttpStatus.OK.value());
+        resp.setData(list);
         return resp;
     }
 

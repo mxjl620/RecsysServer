@@ -4,7 +4,7 @@ public class DelApplicationRequest {
 
     private String userid;
 
-    private Long appid;
+    private String appid;
 
     public String getUserid() {
         return userid;
@@ -14,11 +14,11 @@ public class DelApplicationRequest {
         this.userid = userid;
     }
 
-    public Long getAppid() {
+    public String getAppid() {
         return appid;
     }
 
-    public void setAppid(Long appid) {
+    public void setAppid(String appid) {
         this.appid = appid;
     }
 }

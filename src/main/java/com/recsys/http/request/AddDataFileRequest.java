@@ -1,18 +1,18 @@
 package com.recsys.http.request;
 
-public class AddDataRequest {
+public class AddDataFileRequest {
 
-    private Long appid;
+    private String appid;
 
     private String name;
 
     private String type;
 
-    public Long getAppid() {
+    public String getAppid() {
         return appid;
     }
 
-    public void setAppid(Long appid) {
+    public void setAppid(String appid) {
         this.appid = appid;
     }
 

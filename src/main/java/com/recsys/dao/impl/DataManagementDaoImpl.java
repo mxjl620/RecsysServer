@@ -5,15 +5,19 @@ import com.recsys.dao.DataManagementDao;
 import com.recsys.util.DataUtil;
 import com.recsys.util.Utils;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.client.HTableInterface;
 import org.apache.hadoop.hbase.client.Put;
+import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.hadoop.hbase.HbaseTemplate;
+import org.springframework.data.hadoop.hbase.RowMapper;
 import org.springframework.data.hadoop.hbase.TableCallback;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository("dataManagementDao")
@@ -33,8 +37,8 @@ public class DataManagementDaoImpl implements DataManagementDao{
     @Resource(name = "hbaseConfiguration")
     private Configuration config;
 
-    public DataUtil addDataFile(final Long appid, final DataUtil data) {
-        data.setId(Utils.generateRowKey());
+    public DataUtil addDataFile(final String appid, final DataUtil data) {
+        data.setId(Utils.generateRowKey().toString());
         final String value = Utils.Object2JsonStr(data);
         return hbaseTemplate.execute(TABLE_NAME, new TableCallback<DataUtil>() {
             public DataUtil doInTable(HTableInterface table) throws Throwable {
@@ -46,15 +50,26 @@ public class DataManagementDaoImpl implements DataManagementDao{
         });
     }
 
-    public List<DataUtil> listDataFile(Long appid) {
+    public List<String> listDataFile(String appid) {
+        return hbaseTemplate.get(TABLE_NAME, appid, new RowMapper<List<String>>() {
+            public List<String> mapRow(Result result, int rowNum) throws Exception {
+                List<Cell> ceList = result.listCells();
+                List<String> dataFiles = new ArrayList<String>();
+                if (ceList != null && ceList.size() > 0) {
+                    for (Cell cell : ceList) {
+                        dataFiles.add(Bytes.toString(cell.getValueArray(), cell.getValueOffset(), cell.getValueLength()));
+                    }
+                }
+                return dataFiles;
+            }
+        });
+    }
+
+    public Boolean DeleteDataFile(String appid, String dataid) {
         return null;
     }
 
-    public Boolean DeleteDataFile(Long appid, Long dataid) {
-        return null;
-    }
-
-    public Boolean UploadDataFile(Long appid, Long dataid) {
+    public Boolean UploadDataFile(String appid, String dataid) {
         return null;
     }
 }

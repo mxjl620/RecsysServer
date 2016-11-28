@@ -28,15 +28,15 @@ public class ApplicationServiceImpl implements ApplicationService {
         return applicationDao.modifyApplicationInfo(userid, application);
     }
 
-    public Boolean deleteApplication(String userid, Long appid) {
+    public Boolean deleteApplication(String userid, String appid) {
         return applicationDao.deleteApplication(userid, appid);
     }
 
     public List<Application> listApplicationByUserid(String userid) {
         List<String> strs = applicationDao.listApplicationByUserid(userid);
         List<Application> applications = new ArrayList<Application>();
-        for (int i = 0; i < strs.size(); i++) {
-            applications.add((Application) Utils.Jsonstr2Object(strs.get(i), Application.class));
+        for (String str: strs) {
+            applications.add((Application) Utils.Jsonstr2Object(str, Application.class));
         }
         return applications;
     }

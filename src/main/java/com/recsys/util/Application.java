@@ -2,18 +2,18 @@ package com.recsys.util;
 
 
 public class Application {
-    private Long appid;
+    private String appid;
     private String appName;
     private String appDesc;
     private String email;
     private String productDesc;
     private String token;
 
-    public Long getAppid() {
+    public String getAppid() {
         return appid;
     }
 
-    public void setAppid(Long appid) {
+    public void setAppid(String appid) {
         this.appid = appid;
     }
 

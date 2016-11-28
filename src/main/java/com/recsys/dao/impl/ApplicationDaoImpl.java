@@ -39,7 +39,7 @@ public class ApplicationDaoImpl implements ApplicationDao {
 
 
     public Application addApplication(final Application application, final String userid) {
-        application.setAppid(Utils.generateRowKey());
+        application.setAppid(Utils.generateRowKey().toString());
         final String value = Utils.Object2JsonStr(application);
         return hbaseTemplate.execute(TABLE_NAME, new TableCallback<Application>() {
             public Application doInTable(HTableInterface table) throws Throwable {
@@ -78,7 +78,7 @@ public class ApplicationDaoImpl implements ApplicationDao {
         });
     }
 
-    public Boolean deleteApplication(final String userid, final Long appid) {
+    public Boolean deleteApplication(final String userid, final String appid) {
         hbaseTemplate.execute(TABLE_NAME, new TableCallback() {
             public Object doInTable(HTableInterface htable) throws Throwable {
                 Delete delete = new Delete(Bytes.toBytes(userid));

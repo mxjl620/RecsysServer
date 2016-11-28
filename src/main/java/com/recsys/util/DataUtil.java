@@ -2,7 +2,7 @@ package com.recsys.util;
 
 public class DataUtil {
 
-    private Long id;
+    private String id;
 
     private String name;
 
@@ -10,11 +10,11 @@ public class DataUtil {
 
     private String size;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
