@@ -48,10 +48,8 @@ public class HdfsFileSystem {
 
     /**
      * File对象上传到hdfs
-     * @param conf
-     * @param uri
-     * @param remote
-     * @param local
+     * @param localPath
+     * @param hdfsPath
      * @throws IOException
      */
     public static void createFile(File localPath, String hdfsPath) throws IOException {
