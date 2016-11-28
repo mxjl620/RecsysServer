@@ -5,6 +5,9 @@ import com.recsys.http.request.AddDataFileRequest;
 import com.recsys.http.request.ListDataFileRequest;
 import com.recsys.service.DataManagementService;
 import com.recsys.util.DataUtil;
+import com.recsys.util.HdfsFileSystem;
+import org.apache.commons.fileupload.disk.DiskFileItem;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -12,9 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.util.Iterator;
 import java.util.List;
 
 @Controller
@@ -38,7 +46,7 @@ public class DataManagementController {
             return resp;
         }
         DataUtil data = new DataUtil();
-        if (request.getName() != null){
+        if (request.getName() != null) {
             data.setName(request.getName());
         }
         data.setType(request.getType());
@@ -74,9 +82,41 @@ public class DataManagementController {
 
     @RequestMapping(value = "/UploadDataFile", method = RequestMethod.POST)
     @ResponseBody
-    public BaseResponse UploadDataFile(HttpServletRequest req, HttpServletResponse response) {
+    public BaseResponse UploadDataFile(HttpServletRequest request) throws IllegalStateException, IOException {
+
         BaseResponse resp = new BaseResponse();
+
+        if (request.getParameter("datafileid") == null){
+            resp.setStatus(400);
+            resp.setMsg("parameter error!");
+            return resp;
+        }
+
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
+                request.getSession().getServletContext());
+
+        if (multipartResolver.isMultipart(request)) {
+            MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
+            Iterator iter = multiRequest.getFileNames();
+
+            while (iter.hasNext()) {
+                MultipartFile file = multiRequest.getFile(iter.next().toString());
+                if (file != null) {
+                    String filename = request.getParameter("datafileid");
+                    CommonsMultipartFile cf= (CommonsMultipartFile)file;
+                    DiskFileItem fi = (DiskFileItem)cf.getFileItem();
+                    File inputFile = fi.getStoreLocation();
+                    cf.transferTo(fi.getStoreLocation());
+                    HdfsFileSystem.createFile(inputFile,
+                            "hdfs://192.168.235.146:8020/upload/" + filename);
+                    //TODO update file size
+                }
+
+            }
+        }
+
         resp.setStatus(HttpStatus.OK.value());
+        resp.setMsg("file upload success!");
         return resp;
     }
 }
