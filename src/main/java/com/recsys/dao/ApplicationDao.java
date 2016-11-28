@@ -11,4 +11,6 @@ public interface ApplicationDao {
     public List<String> listApplicationByUserid(String userid);
 
     public Application modifyApplicationInfo(String userid, Application application);
+
+    public Boolean deleteApplication(String userid, Long appid);
 }

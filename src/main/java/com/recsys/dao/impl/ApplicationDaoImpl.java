@@ -7,6 +7,7 @@ import com.recsys.util.Application;
 import com.recsys.util.Utils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.Cell;
+import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.HTableInterface;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
@@ -75,5 +76,17 @@ public class ApplicationDaoImpl implements ApplicationDao {
                 return application;
             }
         });
+    }
+
+    public Boolean deleteApplication(final String userid, final Long appid) {
+        hbaseTemplate.execute(TABLE_NAME, new TableCallback() {
+            public Object doInTable(HTableInterface htable) throws Throwable {
+                Delete delete = new Delete(Bytes.toBytes(userid));
+                delete.deleteColumn(Bytes.toBytes(TABLE_COLUMN_FAMILY), Bytes.toBytes(appid));
+                htable.delete(delete);
+                return null;
+            }
+        });
+        return true;
     }
 }

@@ -1,19 +1,17 @@
 package com.recsys.controller;
 
 import com.recsys.http.request.AddApplicationRequest;
+import com.recsys.http.request.DelApplicationRequest;
 import com.recsys.http.request.ListApplicationRequest;
 import com.recsys.http.request.ModifyApplicationInfoRequest;
 import com.recsys.service.ApplicationService;
 import com.recsys.util.Application;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import com.recsys.http.BaseResponse;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller
@@ -85,8 +83,14 @@ public class ApplicationManagementController {
 
     @RequestMapping(value = "/delApplication", method = RequestMethod.POST)
     @ResponseBody
-    public BaseResponse delApplication(HttpServletRequest req, HttpServletResponse response) {
+    public BaseResponse delApplication(@RequestBody DelApplicationRequest request) {
         BaseResponse resp = new BaseResponse();
+        if (request.getUserid() == null || request.getAppid() == null) {
+            resp.setStatus(400);
+            resp.setMsg("parameter error!");
+            return resp;
+        }
+        resp.setData(applicationService.deleteApplication(request.getUserid(), request.getAppid()));
         resp.setStatus(HttpStatus.OK.value());
         return resp;
     }

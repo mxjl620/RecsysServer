@@ -28,8 +28,8 @@ public class ApplicationServiceImpl implements ApplicationService {
         return applicationDao.modifyApplicationInfo(userid, application);
     }
 
-    public Application deleteApplication(String applicationid, String userid) {
-        return null;
+    public Boolean deleteApplication(String userid, Long appid) {
+        return applicationDao.deleteApplication(userid, appid);
     }
 
     public List<Application> listApplicationByUserid(String userid) {
