@@ -11,7 +11,7 @@ public interface DataManagementService {
 
     public List<DataUtil> listDataFile(String appid);
 
-    public Boolean DeleteDataFile(String appid, String dataid);
+    public Boolean deleteDataFile(String appid, String dataid);
 
-    public DataUtil UpdateFileSize(String appid, String dataid, String fileSize);
+    public DataUtil updateFileSize(String appid, String dataid, String fileSize);
 }

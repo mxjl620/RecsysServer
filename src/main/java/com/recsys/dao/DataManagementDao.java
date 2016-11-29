@@ -10,9 +10,9 @@ public interface DataManagementDao {
 
     public List<String> listDataFile(String appid);
 
-    public Boolean DeleteDataFile(String appid, String dataid);
+    public Boolean deleteDataFile(String appid, String dataid);
 
-    public DataUtil UpdateDataFile(String appid, DataUtil dataFile);
+    public DataUtil updateDataFile(String appid, DataUtil dataFile);
 
     public String findDataFileByid(String appid, String dataid);
 }

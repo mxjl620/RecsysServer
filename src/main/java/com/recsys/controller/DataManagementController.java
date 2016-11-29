@@ -2,6 +2,7 @@ package com.recsys.controller;
 
 import com.recsys.http.BaseResponse;
 import com.recsys.http.request.AddDataFileRequest;
+import com.recsys.http.request.DelDataFileRequest;
 import com.recsys.http.request.ListDataFileRequest;
 import com.recsys.service.DataManagementService;
 import com.recsys.util.DataUtil;
@@ -57,10 +58,18 @@ public class DataManagementController {
         return resp;
     }
 
-    @RequestMapping(value = "/delData", method = RequestMethod.POST)
+    @RequestMapping(value = "/delDataFile", method = RequestMethod.POST)
     @ResponseBody
-    public BaseResponse delDataFile(@RequestBody ListDataFileRequest request) {
+    public BaseResponse delDataFile(@RequestBody DelDataFileRequest request) {
         BaseResponse resp = new BaseResponse();
+        if (request.getAppid() == null || request.getDataid() == null){
+            resp.setStatus(400);
+            resp.setMsg("parameter error!");
+            return resp;
+        }
+        dataManagementService.deleteDataFile(request.getAppid(),
+                request.getDataid());
+        //TODO del hdfs file
         resp.setStatus(HttpStatus.OK.value());
         return resp;
     }
@@ -117,7 +126,7 @@ public class DataManagementController {
 
             }
         }
-        DataUtil dataFile = dataManagementService.UpdateFileSize(request.getParameter("appid"),
+        DataUtil dataFile = dataManagementService.updateFileSize(request.getParameter("appid"),
                 request.getParameter("dataid"), Utils.getFileSize(fileSize));
 
         resp.setStatus(HttpStatus.OK.value());

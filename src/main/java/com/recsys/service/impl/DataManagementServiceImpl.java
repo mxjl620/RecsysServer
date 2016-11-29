@@ -34,17 +34,17 @@ public class DataManagementServiceImpl implements DataManagementService{
         return dataFiles;
     }
 
-    public DataUtil UpdateFileSize(String appid, String dataid, String fileSize) {
+    public DataUtil updateFileSize(String appid, String dataid, String fileSize) {
         String dataFile = dataManagementDao.findDataFileByid(appid, dataid);
         DataUtil data = (DataUtil) Utils.Jsonstr2Object(dataFile, DataUtil.class);
         if (data != null) {
             data.setSize(fileSize);
         }
-        return dataManagementDao.UpdateDataFile(appid, data);
+        return dataManagementDao.updateDataFile(appid, data);
     }
 
-    public Boolean DeleteDataFile(String appid, String dataid) {
-        return null;
+    public Boolean deleteDataFile(String appid, String dataid) {
+        return dataManagementDao.deleteDataFile(appid, dataid);
     }
 
 

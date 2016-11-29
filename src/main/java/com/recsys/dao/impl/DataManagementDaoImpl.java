@@ -6,6 +6,7 @@ import com.recsys.util.DataUtil;
 import com.recsys.util.Utils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.Cell;
+import org.apache.hadoop.hbase.client.Delete;
 import org.apache.hadoop.hbase.client.HTableInterface;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
@@ -70,7 +71,7 @@ public class DataManagementDaoImpl implements DataManagementDao {
         });
     }
 
-    public DataUtil UpdateDataFile(final String appid, final DataUtil dataFile) {
+    public DataUtil updateDataFile(final String appid, final DataUtil dataFile) {
         final String value = Utils.Object2JsonStr(dataFile);
         if (value != null) {
             return hbaseTemplate.execute(TABLE_NAME, new TableCallback<DataUtil>() {
@@ -102,8 +103,16 @@ public class DataManagementDaoImpl implements DataManagementDao {
         });
     }
 
-    public Boolean DeleteDataFile(String appid, String dataid) {
-        return null;
+    public Boolean deleteDataFile(final String appid, final String dataid) {
+        hbaseTemplate.execute(TABLE_NAME, new TableCallback() {
+            public Object doInTable(HTableInterface htable) throws Throwable {
+                Delete delete = new Delete(Bytes.toBytes(appid));
+                delete.deleteColumn(Bytes.toBytes(TABLE_COLUMN_FAMILY), Bytes.toBytes(dataid));
+                htable.delete(delete);
+                return null;
+            }
+        });
+        return true;
     }
 
 }
