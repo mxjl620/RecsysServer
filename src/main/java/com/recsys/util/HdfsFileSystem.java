@@ -67,4 +67,23 @@ public class HdfsFileSystem {
             IOUtils.closeStream(in);
         }
     }
+
+    public static void deleteFile(String file){
+        Configuration conf = new Configuration();
+        FileSystem fs;
+        try {
+            fs= FileSystem.get(URI.create(file), conf);
+
+            Path path = new Path(file);
+            if (!fs.exists(path)) {
+                System.out.println("file does not exists");
+                return;
+            }
+            fs.delete(new Path(file), true);
+            System.out.println("delete file success");
+            fs.close();
+        }catch (IOException e) {
+            System.out.println("delete failed");
+        }
+    }
 }

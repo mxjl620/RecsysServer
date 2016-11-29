@@ -74,6 +74,7 @@ public class DataManagementDaoImpl implements DataManagementDao {
     public DataUtil updateDataFile(final String appid, final DataUtil dataFile) {
         final String value = Utils.Object2JsonStr(dataFile);
         if (value != null) {
+            deleteDataFile(appid, dataFile.getId());
             return hbaseTemplate.execute(TABLE_NAME, new TableCallback<DataUtil>() {
                 public DataUtil doInTable(HTableInterface table) throws Throwable {
                     Put p = new Put(Bytes.toBytes(appid));

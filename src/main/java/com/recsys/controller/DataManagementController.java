@@ -30,6 +30,8 @@ import java.util.List;
 @RequestMapping(value = "dataManagement")
 public class DataManagementController {
 
+    private final String HADOOP_URL = "hdfs://192.168.235.146:8020/upload/";
+
     private DataManagementService dataManagementService;
 
     @Autowired
@@ -67,9 +69,8 @@ public class DataManagementController {
             resp.setMsg("parameter error!");
             return resp;
         }
-        dataManagementService.deleteDataFile(request.getAppid(),
-                request.getDataid());
-        //TODO del hdfs file
+        dataManagementService.deleteDataFile(request.getAppid(), request.getDataid());
+        HdfsFileSystem.deleteFile(HADOOP_URL + request.getDataid());
         resp.setStatus(HttpStatus.OK.value());
         return resp;
     }
@@ -118,8 +119,7 @@ public class DataManagementController {
                     DiskFileItem fi = (DiskFileItem)cf.getFileItem();
                     File inputFile = fi.getStoreLocation();
                     cf.transferTo(fi.getStoreLocation());
-                    HdfsFileSystem.createFile(inputFile,
-                            "hdfs://192.168.235.146:8020/upload/" + filename);
+                    HdfsFileSystem.createFile(inputFile,HADOOP_URL + filename);
 
                     fileSize = inputFile.length();
                 }

@@ -46,6 +46,4 @@ public class DataManagementServiceImpl implements DataManagementService{
     public Boolean deleteDataFile(String appid, String dataid) {
         return dataManagementDao.deleteDataFile(appid, dataid);
     }
-
-
 }
