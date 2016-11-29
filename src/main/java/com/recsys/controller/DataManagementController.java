@@ -6,8 +6,8 @@ import com.recsys.http.request.ListDataFileRequest;
 import com.recsys.service.DataManagementService;
 import com.recsys.util.DataUtil;
 import com.recsys.util.HdfsFileSystem;
+import com.recsys.util.Utils;
 import org.apache.commons.fileupload.disk.DiskFileItem;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -86,11 +86,13 @@ public class DataManagementController {
 
         BaseResponse resp = new BaseResponse();
 
-        if (request.getParameter("datafileid") == null){
+        if (request.getParameter("dataid") == null || request.getParameter("appid") == null){
             resp.setStatus(400);
             resp.setMsg("parameter error!");
             return resp;
         }
+
+        Long fileSize = 0L;
 
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
                 request.getSession().getServletContext());
@@ -102,21 +104,25 @@ public class DataManagementController {
             while (iter.hasNext()) {
                 MultipartFile file = multiRequest.getFile(iter.next().toString());
                 if (file != null) {
-                    String filename = request.getParameter("datafileid");
+                    String filename = request.getParameter("dataid");
                     CommonsMultipartFile cf= (CommonsMultipartFile)file;
                     DiskFileItem fi = (DiskFileItem)cf.getFileItem();
                     File inputFile = fi.getStoreLocation();
                     cf.transferTo(fi.getStoreLocation());
                     HdfsFileSystem.createFile(inputFile,
                             "hdfs://192.168.235.146:8020/upload/" + filename);
-                    //TODO update file size
+
+                    fileSize = inputFile.length();
                 }
 
             }
         }
+        DataUtil dataFile = dataManagementService.UpdateFileSize(request.getParameter("appid"),
+                request.getParameter("dataid"), Utils.getFileSize(fileSize));
 
         resp.setStatus(HttpStatus.OK.value());
         resp.setMsg("file upload success!");
+        resp.setData(dataFile);
         return resp;
     }
 }

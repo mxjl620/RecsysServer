@@ -12,5 +12,7 @@ public interface DataManagementDao {
 
     public Boolean DeleteDataFile(String appid, String dataid);
 
-    public Boolean UploadDataFile(String appid, String dataid);
+    public DataUtil UpdateDataFile(String appid, DataUtil dataFile);
+
+    public String findDataFileByid(String appid, String dataid);
 }

@@ -3,6 +3,7 @@ package com.recsys.util;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
+import java.io.File;
 import java.io.IOException;
 
 public class Utils {
@@ -27,6 +28,15 @@ public class Utils {
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public static String getFileSize(Long size) {
+        Long len = size / 1024;
+        if (len == 0){
+            return size.toString() + " Bytes";
+        } else {
+            return len.toString() + " KB";
         }
     }
 }

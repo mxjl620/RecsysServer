@@ -146,6 +146,14 @@
             <version>2.4</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.facebook.presto.hadoop/hadoop-apache2 -->
+        <dependency>
+            <groupId>com.facebook.presto.hadoop</groupId>
+            <artifactId>hadoop-apache2</artifactId>
+            <version>0.9</version>
+        </dependency>
+
+
 
     </dependencies>
 
