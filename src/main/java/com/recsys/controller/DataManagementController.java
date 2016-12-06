@@ -1,7 +1,6 @@
 package com.recsys.controller;
 
 import com.recsys.http.BaseResponse;
-import com.recsys.http.request.AddDataFileRequest;
 import com.recsys.http.request.DelDataFileRequest;
 import com.recsys.http.request.ListDataFileRequest;
 import com.recsys.service.DataManagementService;
@@ -41,20 +40,51 @@ public class DataManagementController {
 
     @RequestMapping(value = "/addData", method = RequestMethod.POST)
     @ResponseBody
-    public BaseResponse addDataFile(@RequestBody AddDataFileRequest request) {
+    public BaseResponse addDataFile(HttpServletRequest request) throws IOException {
         BaseResponse resp = new BaseResponse();
-        if (request.getAppid() == null || request.getType() == null) {
+        if (request.getParameter("appid") == null || request.getParameter("type") == null) {
             resp.setStatus(400);
             resp.setMsg("parameter error!");
             return resp;
         }
         DataUtil data = new DataUtil();
-        if (request.getName() != null) {
-            data.setName(request.getName());
+        if (request.getParameter("name") != null) {
+            data.setName(request.getParameter("name"));
         }
-        data.setType(request.getType());
-        data.setSize("0");
-        DataUtil result = dataManagementService.addDataFile(request.getAppid(), data);
+        data.setType(request.getParameter("type"));
+
+        data.setSize("0 Kb");
+
+        DataUtil result = dataManagementService.addDataFile(request.getParameter("appid"), data);
+
+        Long fileSize = 0L;
+
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
+                request.getSession().getServletContext());
+
+        if (multipartResolver.isMultipart(request)) {
+            MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
+            Iterator iter = multiRequest.getFileNames();
+
+            while (iter.hasNext()) {
+                MultipartFile file = multiRequest.getFile(iter.next().toString());
+                if (file != null) {
+                    String filename = result.getId();
+                    CommonsMultipartFile cf= (CommonsMultipartFile)file;
+                    DiskFileItem fi = (DiskFileItem)cf.getFileItem();
+                    File inputFile = fi.getStoreLocation();
+                    cf.transferTo(fi.getStoreLocation());
+                    HdfsFileSystem.createFile(inputFile,HADOOP_URL + filename);
+
+                    fileSize = inputFile.length();
+                }
+            }
+        }
+
+        data.setSize(Utils.getFileSize(fileSize));
+
+        result = dataManagementService.updateFileSize(request.getParameter("appid"),
+                result.getId(), Utils.getFileSize(fileSize));
         resp.setStatus(HttpStatus.OK.value());
         resp.setData(result);
         return resp;
@@ -90,48 +120,4 @@ public class DataManagementController {
         return resp;
     }
 
-    @RequestMapping(value = "/UploadDataFile", method = RequestMethod.POST)
-    @ResponseBody
-    public BaseResponse UploadDataFile(HttpServletRequest request) throws IllegalStateException, IOException {
-
-        BaseResponse resp = new BaseResponse();
-
-        if (request.getParameter("dataid") == null || request.getParameter("appid") == null){
-            resp.setStatus(400);
-            resp.setMsg("parameter error!");
-            return resp;
-        }
-
-        Long fileSize = 0L;
-
-        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
-                request.getSession().getServletContext());
-
-        if (multipartResolver.isMultipart(request)) {
-            MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
-            Iterator iter = multiRequest.getFileNames();
-
-            while (iter.hasNext()) {
-                MultipartFile file = multiRequest.getFile(iter.next().toString());
-                if (file != null) {
-                    String filename = request.getParameter("dataid");
-                    CommonsMultipartFile cf= (CommonsMultipartFile)file;
-                    DiskFileItem fi = (DiskFileItem)cf.getFileItem();
-                    File inputFile = fi.getStoreLocation();
-                    cf.transferTo(fi.getStoreLocation());
-                    HdfsFileSystem.createFile(inputFile,HADOOP_URL + filename);
-
-                    fileSize = inputFile.length();
-                }
-
-            }
-        }
-        DataUtil dataFile = dataManagementService.updateFileSize(request.getParameter("appid"),
-                request.getParameter("dataid"), Utils.getFileSize(fileSize));
-
-        resp.setStatus(HttpStatus.OK.value());
-        resp.setMsg("file upload success!");
-        resp.setData(dataFile);
-        return resp;
-    }
 }
